@@ -1,5 +1,7 @@
 # Samsung Browser VOC Intelligence System
 
+<img width="1512" height="982" alt="Screenshot 2026-05-28 at 10 49 23 PM" src="https://github.com/user-attachments/assets/bd37c399-6fb3-4327-8cc6-67950bff7efd" />
+
 A FastAPI backend that ingests Google Play Store review text for Samsung Browser, stores semantic embeddings in local ChromaDB, answers product-manager questions via a RAG chatbot (Claude), and generates a self-contained HTML analytics dashboard from the same corpus.
 
 ## Requirements
