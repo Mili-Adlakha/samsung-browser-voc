@@ -1,7 +1,5 @@
 # Samsung Browser VOC Intelligence System
 
-<img width="1512" height="982" alt="Screenshot 2026-05-28 at 10 49 23 PM" src="https://github.com/user-attachments/assets/bd37c399-6fb3-4327-8cc6-67950bff7efd" />
-
 <img width="1406" height="805" alt="Screenshot 2026-05-28 at 10 50 14 PM" src="https://github.com/user-attachments/assets/c7dc2b93-2020-4bb4-81ff-36b09cbffca3" />
 
 <img width="1406" height="805" alt="Screenshot 2026-05-28 at 10 50 24 PM" src="https://github.com/user-attachments/assets/e6f64da8-9007-4f49-97dd-272bc95c05da" />
