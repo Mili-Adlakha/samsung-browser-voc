@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Samsung Browser · VOC Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <p class="eyebrow">SAMSUNG BROWSER · VOC INTELLIGENCE</p>
+      <h1>Play Store Review Analyzer</h1>
+      <p class="subtitle">Ingest reviews · Ask PM questions · Generate analytics dashboard</p>
+      <div class="status-pill" id="corpusStatus">
+        <span class="status-dot"></span>
+        <span id="corpusStatusText">No reviews ingested yet</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tab-nav" role="tablist">
+    <button class="tab active" data-tab="ingest" role="tab" aria-selected="true">① Upload VOCs</button>
+    <button class="tab" data-tab="chat" role="tab" aria-selected="false">② Chat</button>
+    <button class="tab" data-tab="dashboard" role="tab" aria-selected="false">③ Dashboard</button>
+  </nav>
+
+  <main class="app-main">
+    <!-- INGEST -->
+    <section id="panel-ingest" class="panel active" role="tabpanel">
+      <div class="card">
+        <h2 class="section-label">Ingest Play Store reviews</h2>
+        <p class="hint">Paste from <strong>Play Store</strong> (name → date → review text — stars optional), <strong>Play Console CSV</strong>, or numbered blocks. Each review needs <strong>15+ characters</strong> of text. <strong>.xlsx not supported</strong>.</p>
+        <details class="format-help">
+          <summary>Example format (copy-paste)</summary>
+          <pre>John Doe
+★★★★★
+Great browser, fast and clean. Ad blocking works perfectly.
+3 people found this review helpful
+
+Jane Smith
+★
+Latest update broke everything. Lost all my tabs after sync.
+74 people found this review helpful</pre>
+        </details>
+
+        <div class="field-row">
+          <label>
+            App version
+            <input type="text" id="ingestVersion" value="30.XX" placeholder="30.XX" />
+          </label>
+          <label>
+            Date range <span class="optional">(optional)</span>
+            <input type="text" id="ingestDateRange" placeholder="20-25 May 2026" />
+          </label>
+        </div>
+
+        <label class="full-width">
+          Reviews
+          <textarea id="reviewsInput" rows="12" placeholder="Paste Play Store reviews here…&#10;&#10;John Doe&#10;★★★★★&#10;Great browser, fast and clean…"></textarea>
+        </label>
+
+        <div class="actions-row">
+          <label class="file-btn">
+            <input type="file" id="fileInput" accept=".txt,.csv,.text" hidden />
+            Choose file
+          </label>
+          <button type="button" class="btn secondary" id="clearReviewsBtn">Clear</button>
+          <button type="button" class="btn primary" id="ingestBtn">
+            <span class="btn-label">Ingest reviews</span>
+            <span class="spinner hidden" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div id="ingestResult" class="result-box hidden" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="panel-chat" class="panel" role="tabpanel" hidden>
+      <div class="chat-layout">
+        <aside class="chat-sidebar card">
+          <h2 class="section-label">Settings</h2>
+          <label>
+            Version filter <span class="optional">(optional)</span>
+            <input type="text" id="chatVersionFilter" placeholder="30.XX" />
+          </label>
+          <label>
+            Chunks to retrieve
+            <input type="number" id="chatTopK" value="20" min="1" max="100" />
+          </label>
+          <button type="button" class="btn ghost full-width" id="clearChatBtn">Clear conversation</button>
+        </aside>
+
+        <div class="chat-main card">
+          <div class="chat-messages" id="chatMessages">
+            <div class="message assistant welcome">
+              <p><strong>Ready when you are.</strong> Ingest reviews first, then ask questions like:</p>
+              <ul>
+                <li>What are the top complaints about tab sync?</li>
+                <li>Which issues have the highest upvotes?</li>
+                <li>Are users mentioning competitors?</li>
+              </ul>
+            </div>
+          </div>
+
+          <form class="chat-input-row" id="chatForm">
+            <textarea id="chatInput" rows="2" placeholder="Ask a PM question about the review corpus…" required></textarea>
+            <button type="submit" class="btn primary" id="chatSendBtn">
+              <span class="btn-label">Send</span>
+              <span class="spinner hidden" aria-hidden="true"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="panel-dashboard" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2 class="section-label">Generate VOC dashboard</h2>
+        <p class="hint">Builds a self-contained HTML analytics page from your ingested reviews (usually a few seconds).</p>
+
+        <div class="field-row">
+          <label>
+            App version
+            <input type="text" id="dashVersion" value="30.XX" />
+          </label>
+          <label>
+            Date range
+            <input type="text" id="dashDateRange" value="Recent window" />
+          </label>
+          <label>
+            Max chunks
+            <input type="number" id="dashTopK" value="100" min="1" max="500" />
+          </label>
+        </div>
+
+        <div class="actions-row">
+          <button type="button" class="btn primary" id="generateDashBtn">
+            <span class="btn-label">Generate dashboard</span>
+            <span class="spinner hidden" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn secondary hidden" id="openDashBtn">Open in new tab</button>
+          <button type="button" class="btn secondary hidden" id="downloadDashBtn">Download HTML</button>
+        </div>
+
+        <div id="dashProgress" class="progress-bar hidden">
+          <div class="progress-fill"></div>
+        </div>
+        <div id="dashResult" class="result-box hidden" aria-live="polite"></div>
+
+        <div class="preview-wrap hidden" id="dashPreviewWrap">
+          <h2 class="section-label">Preview</h2>
+          <iframe id="dashPreview" title="Dashboard preview" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
